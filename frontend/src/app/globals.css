@@ -16,7 +16,7 @@
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background: black;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -24,4 +24,21 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+.form_container{
+  width: fit-content;
+  border-radius: 10px;
+  border: solid;
+  padding-left: 100px;
+  padding-right: 100px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  line-height: 50px;
+}
+.serch-box{
+  font-size: 50px;
+  border-color: black;
+}
+.serch-box:hover{
+  border-color: blue;
 }

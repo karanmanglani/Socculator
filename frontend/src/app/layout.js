@@ -1,11 +1,15 @@
 import localFont from "next/font/local";
 import "./globals.css";
+import Image from "next/image"; 
+import Navbar1 from "./components/navbar";
+import background from './background.jpg'; // Ensure the path is correct
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
   weight: "100 900",
 });
+
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
@@ -22,7 +26,16 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        style={{ position: 'relative', overflow: 'hidden' }} // Ensure the body has relative position
       >
+        <Image
+          src={background}
+          layout="fill"
+          objectFit="cover"
+          style={{ zIndex: -1, position: 'absolute' }} // Use absolute positioning
+          alt="Background Image"
+        />
+        <Navbar1 style={{ position: 'absolute', top: '0px', left: '0px' }} />
         {children}
       </body>
     </html>

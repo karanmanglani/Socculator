@@ -42,3 +42,6 @@ body {
 .serch-box:hover{
   border-color: blue;
 }
+.back{
+  background:url('./assets/background.jpg');
+}

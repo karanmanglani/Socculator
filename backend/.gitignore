@@ -1,1 +1,14 @@
+# Ignore node_modules directory
 /node_modules
+
+# Ignore specific files and directories
+gradient_boosting_model
+knn_model
+linear_regression_model
+mlp_model
+shar_explainer
+svr_model
+xgboost_model
+
+# Ignore all .joblib files
+*.joblib

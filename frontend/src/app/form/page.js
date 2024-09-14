@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"; // Import from 'next/navigation' fo
 import { Button } from "@nextui-org/button";
 import Droplist from "../components/Droplist"; // Assuming Droplist is a valid component from your project
 import FromInputs from "./forminputs";
+import Predictedoutput from "./Predictedoutput";
 
 export default function Page() {
     const [loading, setLoading] = useState(false);
@@ -102,30 +103,15 @@ export default function Page() {
 
     if (submitted) {
         return (
-            <div className="flex justify-center items-center min-h-screen">
-                <div className="w-full max-w-lg p-8 rounded-lg shadow-lg bg-white bg-opacity-50 backdrop-blur-md">
-                    <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Prediction Result</h2>
-                    <p className="text-center text-gray-700 mb-4">Here are the details you submitted:</p>
-                    <div className="mb-4">
-                        <p className="text-gray-700"><strong>Player Name:</strong> {playerName}</p>
-                        <p className="text-gray-700"><strong>Player Team:</strong> {playerTeam}</p>
-                        <p className="text-gray-700"><strong>Opponent Team:</strong> {opponentTeam}</p>
-                        <p className="text-gray-700"><strong>Status:</strong> {status}</p>
-                        <p className="text-gray-700"><strong>Model:</strong> {model}</p> {/* Display model */}
-                    </div>
-                    <div className="mb-4">
-                        <h3 className="text-xl font-semibold text-gray-800">Prediction Result:</h3>
-                        {resultLines.map((line, index) => (
-                            <p key={index} className="text-gray-700">{line}</p>
-                        ))}
-                    </div>
-                    <div className="text-center">
-                        <Button onClick={() => setSubmitted(false)} color="primary" size="lg" auto>
-                            Back to Form
-                        </Button>
-                    </div>
-                </div>
-            </div>
+            <Predictedoutput
+            playerName={playerName}
+            playerTeam={playerTeam}
+            opponentTeam={opponentTeam}
+            status={status}
+            model={model}
+            resultLines={resultLines}
+            setSubmitted={setSubmitted}
+    />
         );
     }
 

@@ -1,10 +1,9 @@
-'use client'; 
+'use client';
 import React, { useState } from "react";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button, Input } from "@nextui-org/react";
 
 export default function Droplist({ list = [], getvalue }) {
-  // State to store the selected item to display on the button
-  const [selectedItem, setSelectedItem] = useState("Open List");
+  const [selectedItem, setSelectedItem] = useState("Select an item");
   const [searchTerm, setSearchTerm] = useState(""); // State for search term
   const [filteredItems, setFilteredItems] = useState(list); // State for filtered list
 
@@ -27,40 +26,41 @@ export default function Droplist({ list = [], getvalue }) {
   };
 
   return (
-    <div style={{display:'flex',justifyContent:"space-evenly"}}>
+    <div className="flex items-center space-x-4">
       {/* Search input outside the dropdown */}
-      <div style={{paddingRight:'50px'}}>
-      <Input
-      className="serch-box hover:border-cyan-400"
-        clearable
-        placeholder="Search..."
-        onChange={handleSearch}
-        value={searchTerm}
-        autoFocus
-        fullWidth
-        style={{ marginBottom: '1rem' ,color:'blue',fontWeight:'800',fontSize:'18px'}} 
-        // Add some margin for spacing
-      />
+      <div className="flex-shrink-0">
+        <Input
+          clearable
+          placeholder="Search..."
+          onChange={handleSearch}
+          value={searchTerm}
+          autoFocus
+          className="w-full border rounded-lg shadow-sm focus:ring focus:ring-cyan-300 transition duration-150 ease-in-out"
+          style={{ fontWeight: '600', fontSize: '16px' }}
+        />
       </div>
       <Dropdown>
         <DropdownTrigger>
-          <Button variant="bordered">
+          <Button variant="bordered" className="border-gray-300 hover:border-cyan-500 text-gray-700">
             {selectedItem} {/* Show the selected item on the button */}
           </Button>
         </DropdownTrigger>
         <DropdownMenu
           aria-label="Dynamic Actions"
           onAction={(key) => handleSelect(key)}
+          className="w-48"
         >
           {/* Map over the filtered list */}
           {filteredItems.length > 0 ? (
             filteredItems.map((item, index) => (
-              <DropdownItem key={index} eventKey={index.toString()}>
-                <span style={{ color: 'black' }}>{item}</span>
+              <DropdownItem key={index} eventKey={index.toString()} className="text-black">
+                {item}
               </DropdownItem>
             ))
           ) : (
-            <DropdownItem key="none" disabled>No items available</DropdownItem>
+            <DropdownItem key="none" disabled className="text-gray-500">
+              No items available
+            </DropdownItem>
           )}
         </DropdownMenu>
       </Dropdown>

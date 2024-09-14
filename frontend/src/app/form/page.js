@@ -19,26 +19,30 @@ export default function Page() {
     const statusArray = ['winner', 'looser']; // Using consistent variable naming
 
     return (
-        <div>
-            <div style={{height:"700px",display:'flex',justifyContent:'center'}}>
-                <div className="form_container" style={{height:'500px',marginTop:'100px'}}>
-                <div>Select the Team Name</div>
-                <div>
-                    {/* Passing the appropriate array and setter function */}
+        <div className="flex justify-center items-center min-h-screen">
+            <div className="w-full max-w-lg p-8 rounded-lg shadow-lg bg-white bg-opacity-50 backdrop-blur-md">
+                <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Prediction Form</h2>
+                
+                <div className="mb-6">
+                    <label className="block text-gray-700 text-sm font-semibold mb-2">Select the Team Name</label>
                     <Droplist list={statusArray} getvalue={setTeam} />
                 </div>
-                <div>Select the Player Name</div>
-                <div>
+                
+                <div className="mb-6">
+                    <label className="block text-gray-700 text-sm font-semibold mb-2">Select the Player Name</label>
                     <Droplist list={statusArray} getvalue={setPlayer} />
                 </div>
-                <div>Select the Status</div>
-                <div>
+                
+                <div className="mb-6">
+                    <label className="block text-gray-700 text-sm font-semibold mb-2">Select the Status</label>
                     <Droplist list={statusArray} getvalue={setStatus} />
                 </div>
-                <div style={{marginTop:'50px'}}>
-                <Button onClick={printData}>Predict the output</Button>
+                
+                <div className="text-center">
+                    <Button onClick={printData} color="primary" size="lg" auto>
+                        Predict the Output
+                    </Button>
                 </div>
-            </div>
             </div>
         </div>
     );

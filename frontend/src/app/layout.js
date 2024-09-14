@@ -26,13 +26,14 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        style={{ position: 'relative', overflow: 'hidden' }} // Ensure the body has relative position
+        style={{ position: 'relative' }} // Ensure the body has relative position
       >
         <Image
           src={background}
           layout="fill"
           objectFit="cover"
-          style={{ zIndex: -1, position: 'absolute' }} // Use absolute positioning
+          style={{ zIndex: -1, position: 'absolute' ,minHeight:'120vh'}}
+           // Use absolute positioning
           alt="Background Image"
         />
         <Navbar1 style={{ position: 'absolute', top: '0px', left: '0px' }} />

@@ -6,6 +6,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; // Import from 'next/navigation' for client-side routing
 import { Button } from "@nextui-org/button";
 import Droplist from "../components/Droplist"; // Assuming Droplist is a valid component from your project
+import FromInputs from "./forminputs";
 
 export default function Page() {
     const [loading, setLoading] = useState(false);
@@ -130,9 +131,9 @@ export default function Page() {
 
     // Render form page
     return (
-        <div>
+        <div >
             {loading && (
-                <div style={{ display: "flex", justifyContent: 'center', marginTop: '100px' }}>
+                <div style={{ display: "flex", justifyContent: 'center', marginTop: '100px'}}>
                     <div role="status">
                         <svg aria-hidden="true" className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
@@ -143,79 +144,25 @@ export default function Page() {
                 </div>
             )}
             {!loading && (
-                <div>
-                <div className="flex justify-center items-center min-h-screen">
-                    <div className="w-full max-w-lg p-8 rounded-lg shadow-lg bg-white bg-opacity-50 backdrop-blur-md">
-                        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Prediction Form</h2>
-            
-                        {/* Player Name */}
-                        <div className="mb-6">
-                            <label className="block text-gray-700 text-sm font-semibold mb-2">Select Player Name</label>
-                            <Droplist list={players} getvalue={setPlayerName} />
-                        </div>
-            
-                        {/* Teams */}
-                        <div className="flex items-center mb-6">
-                            <div className="flex-1 mr-4">
-                                <label className="block text-gray-700 text-sm font-semibold mb-2">Select My Team</label>
-                                <Droplist list={availableTeamsForPlayerTeam} getvalue={team => {
-                                    setPlayerTeam(team);
-                                    // Reset opponent team if it was the same
-                                    if (team === opponentTeam) {
-                                        setOpponentTeam("");
-                                    }
-                                }} />
-                            </div>
-                            
-                            <div className="mx-4 text-center">
-                                <span className="text-gray-700 text-lg font-semibold">VS</span>
-                            </div>
-                            
-                            <div className="flex-1 ml-4">
-                                <label className="block text-gray-700 text-sm font-semibold mb-2">Select Opponent Team</label>
-                                <Droplist list={availableTeamsForOpponentTeam} getvalue={team => {
-                                    setOpponentTeam(team);
-                                    // Reset player team if it was the same
-                                    if (team === playerTeam) {
-                                        setPlayerTeam("");
-                                    }
-                                }} />
-                            </div>
-                        </div>
-            
-                        {/* Status */}
-                        <div className="mb-6">
-                            <label className="block text-gray-700 text-sm font-semibold mb-2">Select Status</label>
-                            <Droplist list={statusArray} getvalue={setStatus} />
-                        </div>
-            
-                        {/* Model */}
-                        <div className="mb-6">
-                            <label className="block text-gray-700 text-sm font-semibold mb-2">Select Model</label>
-                            <Droplist list={modelArray} getvalue={setModel} />
-                        </div>
-            
-                        {/* Submit Button */}
-                        <div className="text-center">
-                            <Button onClick={handleSubmit} color="primary" size="lg" auto>
-                                Predict the Output
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
+                 <FromInputs
+                 players={players}
+                 playerName={playerName}
+                 playerTeam={playerTeam}
+                 opponentTeam={opponentTeam}
+                 status={status}
+                 model={model}
+                 availableTeamsForPlayerTeam={availableTeamsForPlayerTeam}
+                 availableTeamsForOpponentTeam={availableTeamsForOpponentTeam}
+                 statusArray={statusArray}
+                 modelArray={modelArray}
+                 setPlayerName={setPlayerName}
+                 setPlayerTeam={setPlayerTeam}
+                 setOpponentTeam={setOpponentTeam}
+                 setStatus={setStatus}
+                 setModel={setModel}
+                 handleSubmit={handleSubmit}
+               />
             )}
-             <div>
-            <h1>Country Flag</h1>
-            <img
-                src={"https://flagsapi.com/BE/flat/64.png"}
-                alt="Country Flag"
-                width={500} 
-                height={500}
-                layout="intrinsic"
-            />
-        </div>
         </div>
     );
 }

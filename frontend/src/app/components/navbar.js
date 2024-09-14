@@ -67,6 +67,14 @@ export default function Navbar1() {
               Integrations
             </Link>
           </NavbarItem>
+          <NavbarItem>
+            <Link
+              href="/form"
+              className="text-white hover:text-blue-500 transition-colors duration-300"
+            >
+              Predicting Form
+            </Link>
+          </NavbarItem>
         </NavbarContent>
 
         <NavbarContent justify="end">

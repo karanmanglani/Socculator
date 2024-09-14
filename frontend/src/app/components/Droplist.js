@@ -18,6 +18,7 @@ export default function Droplist({ list = [], getvalue }) {
   // Handle item selection
   const handleSelect = (item) => {
     setSelectedItem(item);
+    setSearchTerm(item); // Update search term to selected item
     getvalue(item);
     setIsDropdownOpen(false); // Close dropdown after selecting
   };
@@ -54,14 +55,14 @@ export default function Droplist({ list = [], getvalue }) {
       )}
 
       {/* Button to display selected item */}
-      <div className="mt-2">
+      {/* <div className="mt-2">
         <button
           onClick={() => setIsDropdownOpen((prev) => !prev)}
           className="w-full p-2 border rounded-lg shadow-sm bg-white hover:border-cyan-500 text-gray-700"
         >
           {selectedItem}
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }

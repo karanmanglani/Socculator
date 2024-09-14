@@ -93,8 +93,8 @@ app.post("/fetchuser", fetchuser, async (req, res) => {
 
 app.post('/submit', async (req, res) => {
   try {
-    const {player, team,opponent,status } = req.body;
-    const command = `python ../python/main.py xgboost_model "${player}" ${team} ${opponent} ${status}`;
+    const {player, team,opponent,status,model_name } = req.body;
+    const command = `python ../python/main.py ${model_name} "${player}" "${team}" "${opponent}" ${status}`;
 
     console.log(`Executing command: ${command}`);
 

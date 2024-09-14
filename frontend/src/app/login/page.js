@@ -42,8 +42,8 @@ export default function LoginForm() {
         // Store authToken in cookie using react-cookie
         setCookie('authToken', data.authToken, { path: '/', maxAge: 604800 }); // 7 days expiration (maxAge in seconds)
         
-        // Redirect to /form page
-        router.push("/form");
+        // Force reload the page
+        window.location.href = "/form"; // Use window.location.href to trigger a full reload
       } else {
         // Display login error if authentication fails
         setLoginError("Invalid credentials. Please try again.");

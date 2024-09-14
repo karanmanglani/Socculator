@@ -1,5 +1,6 @@
 'use client'; // Ensure the component is client-side
-
+import { teams } from "./teams";
+import { players } from "./players";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; // Import from 'next/navigation' for client-side routing
 import { Button } from "@nextui-org/button";
@@ -50,19 +51,19 @@ export default function Page() {
                 {/* Player Name */}
                 <div className="mb-6">
                     <label className="block text-gray-700 text-sm font-semibold mb-2">Select Player Name</label>
-                    <Droplist list={playerArray} getvalue={setPlayerName} />
+                    <Droplist list={players} getvalue={setPlayerName} />
                 </div>
 
                 {/* Player Team */}
                 <div className="mb-6">
                     <label className="block text-gray-700 text-sm font-semibold mb-2">Select Player Team</label>
-                    <Droplist list={teamArray} getvalue={setPlayerTeam} />
+                    <Droplist list={teams} getvalue={setPlayerTeam} />
                 </div>
 
                 {/* Opponent Team */}
                 <div className="mb-6">
                     <label className="block text-gray-700 text-sm font-semibold mb-2">Select Opponent Team</label>
-                    <Droplist list={teamArray} getvalue={setOpponentTeam} />
+                    <Droplist list={teams} getvalue={setOpponentTeam} />
                 </div>
 
                 {/* Status */}

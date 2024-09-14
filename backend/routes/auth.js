@@ -2,6 +2,8 @@ const express=require('express');
 const user=require('../modles/auth');
 const bycrypt=require("bcryptjs");
 const jsonweb=require("jsonwebtoken");
+const { exec } = require('child_process');
+const bodyParser = require('body-parser');
 require('dotenv').config();
 const serect_data="This is very confidential"
 const fetchuser=require("../middleware/fetchuser");
@@ -91,10 +93,13 @@ app.post("/fetchuser", fetchuser, async (req, res) => {
 
 app.post('/submit', async (req, res) => {
   try {
-    const { playerName, playerTeam, opponentTeam, status } = req.body;
+    // const { playerName, playerTeam, opponentTeam, status } = req.body;
+    //python main.py xgboost_model "Ludovic Magnin" Switzerland Argentina 1
 
-    // Run Python script with the values
-    exec(`python3  script.py ${playerName} ${playerTeam} ${opponentTeam} ${status}`, (error, stdout, stderr) => {
+    // Construct the command to run the Python script with the correct path
+    const command = `python IIIT_NAYA_RAIPUR/python/main.py xgboost_model "Ludovic Magnin" Switzerland Argentina 1`;
+    
+    exec(command, (error, stdout, stderr) => {
       if (error) {
         console.error(`Error executing Python script: ${error.message}`);
         return res.status(500).send('Error executing script');
@@ -103,8 +108,9 @@ app.post('/submit', async (req, res) => {
         console.error(`Python script stderr: ${stderr}`);
         return res.status(500).send('Error executing script');
       }
-      // Assuming the output of the Python script is in stdout
+      // Send the output of the Python script as a response
       res.json({ success: true, result: stdout });
+      console.log(stdout);
     });
   } catch (error) {
     console.error(`Server error: ${error.message}`);

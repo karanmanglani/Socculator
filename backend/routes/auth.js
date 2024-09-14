@@ -89,6 +89,27 @@ app.post("/fetchuser", fetchuser, async (req, res) => {
   });
 });
 
+app.post('/submit', async (req, res) => {
+  try {
+    const { playerName, playerTeam, opponentTeam, status } = req.body;
 
+    // Run Python script with the values
+    exec(`python3  script.py ${playerName} ${playerTeam} ${opponentTeam} ${status}`, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error executing Python script: ${error.message}`);
+        return res.status(500).send('Error executing script');
+      }
+      if (stderr) {
+        console.error(`Python script stderr: ${stderr}`);
+        return res.status(500).send('Error executing script');
+      }
+      // Assuming the output of the Python script is in stdout
+      res.json({ success: true, result: stdout });
+    });
+  } catch (error) {
+    console.error(`Server error: ${error.message}`);
+    res.status(500).send('Server Error');
+  }
+});
 module.exports=app;
 

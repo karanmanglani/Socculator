@@ -1,69 +1,67 @@
 'use client';
-import React, { useState } from "react";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button, Input } from "@nextui-org/react";
+import React, { useState, useEffect } from 'react';
 
 export default function Droplist({ list = [], getvalue }) {
-  const [selectedItem, setSelectedItem] = useState("Select an item");
-  const [searchTerm, setSearchTerm] = useState(""); // State for search term
+  const [selectedItem, setSelectedItem] = useState('Select an item');
+  const [searchTerm, setSearchTerm] = useState(''); // State for search term
   const [filteredItems, setFilteredItems] = useState(list); // State for filtered list
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Control dropdown visibility
 
-  // Function to handle selection of a dropdown item
-  const handleSelect = (key) => {
-    const item = filteredItems[key];  // Get the actual item based on the key (filtered list)
-    setSelectedItem(item);            // Update the button text with the selected item
-    getvalue(item);                   // Pass the selected item to the parent component
-  };
-
-  // Function to handle search input change
-  const handleSearch = (e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-    // Filter the list based on the search term
+  // Update filtered items when search term changes
+  useEffect(() => {
     const filtered = list.filter((item) =>
-      item.toLowerCase().includes(value.toLowerCase())
+      item.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    setFilteredItems(filtered); // Update the filtered items state
+    setFilteredItems(filtered);
+  }, [searchTerm, list]);
+
+  // Handle item selection
+  const handleSelect = (item) => {
+    setSelectedItem(item);
+    getvalue(item);
+    setIsDropdownOpen(false); // Close dropdown after selecting
   };
 
   return (
-    <div className="flex items-center space-x-4">
-      {/* Search input outside the dropdown */}
-      <div className="flex-shrink-0">
-        <Input
-          clearable
-          placeholder="Search..."
-          onChange={handleSearch}
-          value={searchTerm}
-          autoFocus
-          className="w-full border rounded-lg shadow-sm focus:ring focus:ring-cyan-300 transition duration-150 ease-in-out"
-          style={{ fontWeight: '600', fontSize: '16px' }}
-        />
-      </div>
-      <Dropdown>
-        <DropdownTrigger>
-          <Button variant="bordered" className="border-gray-300 hover:border-cyan-500 text-gray-700">
-            {selectedItem} {/* Show the selected item on the button */}
-          </Button>
-        </DropdownTrigger>
-        <DropdownMenu
-          aria-label="Dynamic Actions"
-          onAction={(key) => handleSelect(key)}
-          className="w-48"
-        >
-          {/* Map over the filtered list */}
+    <div className="relative w-full">
+      {/* Input Field for Search */}
+      <input
+        type="text"
+        placeholder="Search..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        onFocus={() => setIsDropdownOpen(true)} // Open dropdown when input is focused
+        className="w-full p-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-cyan-300 transition duration-150 ease-in-out"
+      />
+
+      {/* Dropdown Menu */}
+      {isDropdownOpen && (
+        <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-lg mt-1 max-h-60 overflow-auto shadow-lg">
           {filteredItems.length > 0 ? (
             filteredItems.map((item, index) => (
-              <DropdownItem key={index} eventKey={index.toString()} className="text-black">
+              <li
+                key={index}
+                onClick={() => handleSelect(item)}
+                className="cursor-pointer p-2 hover:bg-cyan-100 text-gray-700"
+              >
                 {item}
-              </DropdownItem>
+              </li>
             ))
           ) : (
-            <DropdownItem key="none" disabled className="text-gray-500">
-              No items available
-            </DropdownItem>
+            <li className="p-2 text-gray-500">No items found</li>
           )}
-        </DropdownMenu>
-      </Dropdown>
+        </ul>
+      )}
+
+      {/* Button to display selected item */}
+      <div className="mt-2">
+        <button
+          onClick={() => setIsDropdownOpen((prev) => !prev)}
+          className="w-full p-2 border rounded-lg shadow-sm bg-white hover:border-cyan-500 text-gray-700"
+        >
+          {selectedItem}
+        </button>
+      </div>
     </div>
   );
 }

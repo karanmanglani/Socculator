@@ -6,9 +6,10 @@ import { Button } from "@nextui-org/button";
 import Droplist from "../components/Droplist"; // Assuming Droplist is a valid component from your project
 
 export default function Page() {
-    const [team, setTeam] = useState("");
-    const [player, setPlayer] = useState("");
-    const [status, setStatus] = useState("");
+    const [playerName, setPlayerName] = useState(""); // State for player name
+    const [playerTeam, setPlayerTeam] = useState(""); // State for player team
+    const [opponentTeam, setOpponentTeam] = useState(""); // State for opponent team
+    const [status, setStatus] = useState(""); // State for status
     
     const router = useRouter(); // Initialize router from 'next/navigation'
 
@@ -30,33 +31,47 @@ export default function Page() {
 
     // Function to print the selected values
     function printData() {
-        console.log("Team:", team);
-        console.log("Player:", player);
+        console.log("Player Name:", playerName);
+        console.log("Player Team:", playerTeam);
+        console.log("Opponent Team:", opponentTeam);
         console.log("Status:", status);
     }
 
-    const statusArray = ['winner', 'looser']; // Using consistent variable naming
+    // Example options for teams, players, and statuses
+    const teamArray = ['Team A', 'Team B', 'Team C', 'Team D'];
+    const playerArray = ['Player 1', 'Player 2', 'Player 3', 'Player 4'];
+    const statusArray = ['Winner', 'Loser'];
 
     return (
         <div className="flex justify-center items-center min-h-screen">
             <div className="w-full max-w-lg p-8 rounded-lg shadow-lg bg-white bg-opacity-50 backdrop-blur-md">
                 <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Prediction Form</h2>
                 
+                {/* Player Name */}
                 <div className="mb-6">
-                    <label className="block text-gray-700 text-sm font-semibold mb-2">Select the Team Name</label>
-                    <Droplist list={statusArray} getvalue={setTeam} />
+                    <label className="block text-gray-700 text-sm font-semibold mb-2">Select Player Name</label>
+                    <Droplist list={playerArray} getvalue={setPlayerName} />
                 </div>
-                
+
+                {/* Player Team */}
                 <div className="mb-6">
-                    <label className="block text-gray-700 text-sm font-semibold mb-2">Select the Player Name</label>
-                    <Droplist list={statusArray} getvalue={setPlayer} />
+                    <label className="block text-gray-700 text-sm font-semibold mb-2">Select Player Team</label>
+                    <Droplist list={teamArray} getvalue={setPlayerTeam} />
                 </div>
-                
+
+                {/* Opponent Team */}
                 <div className="mb-6">
-                    <label className="block text-gray-700 text-sm font-semibold mb-2">Select the Status</label>
+                    <label className="block text-gray-700 text-sm font-semibold mb-2">Select Opponent Team</label>
+                    <Droplist list={teamArray} getvalue={setOpponentTeam} />
+                </div>
+
+                {/* Status */}
+                <div className="mb-6">
+                    <label className="block text-gray-700 text-sm font-semibold mb-2">Select Status</label>
                     <Droplist list={statusArray} getvalue={setStatus} />
                 </div>
                 
+                {/* Submit Button */}
                 <div className="text-center">
                     <Button onClick={printData} color="primary" size="lg" auto>
                         Predict the Output

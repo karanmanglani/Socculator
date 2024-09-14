@@ -85,7 +85,7 @@ export default function Page() {
     const teamArray = ['Team A', 'Team B', 'Team C', 'Team D'];
     const playerArray = ['Player 1', 'Player 2', 'Player 3', 'Player 4'];
     const statusArray = ['Winner', 'Loser'];
-    const modelArray = ['xgboost_model', 'svr_model', 'mlp_model', 'linear_regression_model', 'knn_model', 'gradient_boosting_model', 'goal_predictor_model'];
+    const modelArray = ['xgboost_model', 'svr_model', 'linear_regression_model', 'knn_model',  'random_forest_model'];
 
     if (submitted) {
         return (

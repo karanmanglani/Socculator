@@ -93,7 +93,7 @@ app.post("/fetchuser", fetchuser, async (req, res) => {
 
 app.post('/submit', async (req, res) => {
   try {
-    const {player, team,opponent,status,model_name } = req.body;
+    const { player, team, opponent, status, model_name } = req.body;
     const command = `python ../python/main.py ${model_name} "${player}" "${team}" "${opponent}" ${status}`;
 
     console.log(`Executing command: ${command}`);
@@ -103,19 +103,29 @@ app.post('/submit', async (req, res) => {
         console.error(`Error executing Python script: ${error.message}`);
         return res.status(500).send('Error executing script');
       }
-      if (stderr) {
-        console.error(`Python script stderr: ${stderr}`);
-        return res.status(500).send('Error executing script');
+
+      // Combine stdout and stderr
+      let combinedOutput = `${stdout}\n${stderr}`;
+
+      // Define the pattern after which content should be removed
+      const pattern = "C:\\";
+
+      // Find the position of the pattern
+      const patternIndex = combinedOutput.indexOf(pattern);
+
+      // If the pattern is found, truncate the output to just before the pattern
+      if (patternIndex !== -1) {
+        combinedOutput = combinedOutput.substring(0, patternIndex);
       }
-      // Send the output of the Python script as a response
-      res.json({ success: true, result: stdout });
-      console.log(`Python script output: ${stdout}`);
+
+      // Send the cleaned output as a response
+      res.json({ success: true, result: combinedOutput });
+      console.log(`Python script output: ${combinedOutput}`);
     });
   } catch (error) {
     console.error(`Server error: ${error.message}`);
     res.status(500).send('Server Error');
   }
 });
-
 module.exports=app;
 

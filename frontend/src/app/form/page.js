@@ -8,7 +8,7 @@ import { Button } from "@nextui-org/button";
 import Droplist from "../components/Droplist"; // Assuming Droplist is a valid component from your project
 import FromInputs from "./forminputs";
 import Predictedoutput from "./Predictedoutput";
-
+import PlayerDetails from "./PlayerDetails";
 export default function Page() {
     const [loading, setLoading] = useState(false);
     const [playerName, setPlayerName] = useState(""); // State for player name
@@ -18,7 +18,7 @@ export default function Page() {
     const [model, setModel] = useState(""); // State for model
     const [submitted, setSubmitted] = useState(false); // State to toggle between form and result
     const [resultLines, setResultLines] = useState([]);
-
+    const[report,setReport]=useState([]);
     const router = useRouter(); // Initialize router from 'next/navigation'
 
     // Example options for teams, players, and statuses
@@ -54,14 +54,14 @@ export default function Page() {
 
     // Function to handle form submission
     async function handleSubmit() {
-        setLoading(true);
+        setLoading(true); // Set loading state to true before starting
         console.log("Player Name:", playerName);
         console.log("Player Team:", playerTeam);
         console.log("Opponent Team:", opponentTeam);
         console.log("Status:", status);
         console.log("Model:", model); // Print model to console
-
-        // Define the payload
+    
+        // Define the payload for the first request
         const payload = {
             model_name: model, // Include model in the payload
             player: playerName,
@@ -69,40 +69,63 @@ export default function Page() {
             opponent: opponentTeam,
             status: status === "Winner" ? 1 : 0
         };
-
+    
         try {
-            // Make the POST request
-            const response = await fetch("http://localhost:3002/auth/submit", {
+            // First POST request to submit data
+            const submitResponse = await fetch("http://localhost:3002/auth/submit", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(payload),
             });
-
+    
             // Check if the response is okay
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
+            if (!submitResponse.ok) {
+                throw new Error("Error in submitting form: Network response was not ok");
             }
-
-            // Parse the JSON response
-            const result = await response.json();
-
-            // Transform result into an array
-            const resultLines = result.result.split('\r\n').map(line => line.trim()).filter(line => line);
-
-            // Set state with transformed result
-            setResultLines(resultLines);
-            setSubmitted(true);
-            setLoading(false);
+    
+            // Parse the JSON response from the first POST request
+            const submitResult = await submitResponse.json();
+            console.log("First Request Response:", submitResult); // Log the response of the first request
+    
+            // Transform the result and update state if needed
+            const resultLines = submitResult.result.split('\r\n').map(line => line.trim()).filter(line => line);
+            setResultLines(resultLines); // Update state with transformed result
+            setSubmitted(true); // Update the form submission state
+    
+            // Second POST request to fetch report data
+            const reportResponse = await fetch("http://localhost:3002/auth/getreport", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ player: playerName }), // Pass player name as payload
+            });
+    
+            // Check if the response is okay
+            if (!reportResponse.ok) {
+                throw new Error("Error in fetching report: Network response was not ok");
+            }
+    
+            // Parse the JSON response from the second POST request
+            const reportData = await reportResponse.json();
+            console.log("Second Request Response (Report):", reportData.result); // Log the response of the second request
+            // Optionally, store the report in the state if you want to display it later
+            setReport(reportData.result);
+            console.log(report.result.total_goal)
+    
         } catch (error) {
-            console.error("Error submitting form:", error);
-            setLoading(false);
+            console.error("Error during form submission:", error);
+        } finally {
+            setLoading(false); // Ensure loading is set to false after everything
         }
     }
+    
 
     if (submitted) {
         return (
+            <div>
             <Predictedoutput
             playerName={playerName}
             playerTeam={playerTeam}
@@ -112,6 +135,8 @@ export default function Page() {
             resultLines={resultLines}
             setSubmitted={setSubmitted}
     />
+             <PlayerDetails result={report} teamname={playerTeam} />
+            </div>      
         );
     }
 

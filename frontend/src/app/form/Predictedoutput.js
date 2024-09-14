@@ -11,7 +11,7 @@ export default function PredictedOutput({
   setSubmitted
 }) {
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-6">
+    <div className="flex justify-center items-center min-h-screen  p-6">
       <div className="w-full max-w-lg p-8 rounded-lg shadow-lg bg-white bg-opacity-90 backdrop-blur-md border border-gray-300">
         <h2 className="text-4xl font-extrabold mb-6 text-center text-gray-900">Prediction Result</h2>
         <p className="text-center text-gray-600 mb-6">Here are the details you submitted:</p>

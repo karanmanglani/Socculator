@@ -1,8 +1,8 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 import Droplist from '../components/Droplist';
 import { Button } from '@nextui-org/button';
-import findCountryCode from './flag'; // Ensure this function is correctly imported
+import findCountryCode from './flag'; // Assuming this function returns the country code
 
 export default function FromInputs({
   players,
@@ -19,102 +19,102 @@ export default function FromInputs({
   opponentTeam,
   playerTeam
 }) {
-  // State for country codes and image load status
-  const [playerTeamCode, setPlayerTeamCode] = useState("");
-  const [opponentTeamCode, setOpponentTeamCode] = useState("");
-  const [playerTeamImageLoaded, setPlayerTeamImageLoaded] = useState(false);
-  const [opponentTeamImageLoaded, setOpponentTeamImageLoaded] = useState(false);
-
-  // Handle team selection and update the country codes
+  // Handle player team change and update the country codes
   const handlePlayerTeamChange = (team) => {
     setPlayerTeam(team);
-    const code = findCountryCode(team).toUpperCase();
-    setPlayerTeamCode(code);
-    setPlayerTeamImageLoaded(false); // Reset image load status
     if (team === opponentTeam) {
-      setOpponentTeam("");
-      setOpponentTeamCode(""); // Clear opponent team code
+      setOpponentTeam(""); // Clear opponent team if it matches
     }
   };
 
+  // Handle opponent team change and update the country codes
   const handleOpponentTeamChange = (team) => {
     setOpponentTeam(team);
-    const code = findCountryCode(team).toUpperCase();
-    setOpponentTeamCode(code);
-    setOpponentTeamImageLoaded(false); // Reset image load status
     if (team === playerTeam) {
-      setPlayerTeam("");
-      setPlayerTeamCode(""); // Clear player team code
+      setPlayerTeam(""); // Clear player team if it matches
     }
   };
 
+  // Filter teams to exclude the currently selected team in the opposite dropdown
+  const filteredPlayerTeams = availableTeamsForPlayerTeam.filter(team => team !== opponentTeam);
+  const filteredOpponentTeams = availableTeamsForOpponentTeam.filter(team => team !== playerTeam);
+
   return (
-    <div className="flex justify-center items-center">
-      <div className="p-8 bg-white rounded-lg shadow-lg bg-opacity-80 backdrop-blur-md border border-gray-300" style={{ width: '800px' }}>
-        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Prediction Form</h2>
-
-        {/* Player Name */}
-        <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-semibold mb-2">Select Player Name</label>
-          <Droplist list={players} getvalue={setPlayerName} />
-        </div>
-
+    <div className="flex justify-center items-center min-h-screen  ">
+      <div className=" shadow-lg rounded-lg p-8" style={{ width: '800px' }}>
+        
         {/* Teams */}
         <div className="flex items-center mb-6">
           <div className="flex-1 mr-4">
-            <label className="block text-gray-700 text-sm font-semibold mb-2"> My Team</label>
-            <Droplist list={availableTeamsForPlayerTeam} getvalue={handlePlayerTeamChange} />
-            <div className="flex justify-center mt-2">
-              {playerTeamCode ? (
-                <img
-                  src={`https://flagsapi.com/${playerTeamCode}/shiny/64.png`}
-                  alt="My Team Flag"
-                  className={`w-16 h-16 object-cover ${playerTeamImageLoaded ? '' : 'hidden'}`}
-                  onLoad={() => setPlayerTeamImageLoaded(true)}
-                  onError={() => setPlayerTeamImageLoaded(false)}
-                />
-              ) : (
-                <div className="w-16 h-16 flex justify-center items-center text-gray-400">No Flag</div>
-              )}
+            <label className="block text-white text-sm font-semibold mb-2">Select Your Team</label>
+            <div className="flex justify-between items-center space-x-4">
+              <Droplist list={filteredPlayerTeams} getvalue={handlePlayerTeamChange} PLACEHOLDER={"Select Your Team A"} />
+              <div className="flex justify-center mt-2">
+                {playerTeam ? (
+                  <img
+                    src={`https://flagsapi.com/${findCountryCode(playerTeam)}/shiny/64.png`} // Using findCountryCode function
+                    alt="My Team Flag"
+                    className="w-16 h-16 "
+                  />
+                ) : (
+                  <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center text-gray-600">
+                    No Flag
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
-          <div className="mx-4 text-center text-gray-700 text-lg font-semibold">VS</div>
+          <div className="mx-4 text-center text-white text-xl font-semibold">VS</div>
 
           <div className="flex-1 ml-4">
-            <label className="block text-gray-700 text-sm font-semibold mb-2">Select Opponent Team</label>
-            <Droplist list={availableTeamsForOpponentTeam} getvalue={handleOpponentTeamChange} />
-            <div className="flex justify-center mt-2">
-              {opponentTeamCode ? (
-                <img
-                  src={`https://flagsapi.com/${opponentTeamCode}/flat/64.png`}
-                  alt="Opponent Team Flag"
-                  className={`w-16 h-16 object-cover ${opponentTeamImageLoaded ? '' : 'hidden'}`}
-                  onLoad={() => setOpponentTeamImageLoaded(true)}
-                  onError={() => setOpponentTeamImageLoaded(false)}
-                />
-              ) : (
-                <div className="w-16 h-16 flex justify-center items-center text-gray-400">No Flag</div>
-              )}
+            <label className="block text-white text-sm font-semibold mb-2">Select Opponent Team</label>
+            <div className="flex justify-between items-center space-x-4">
+              <div className="flex justify-center mt-2">
+                {opponentTeam ? (
+                  <img
+                    src={`https://flagsapi.com/${findCountryCode(opponentTeam)}/flat/64.png`} // Using findCountryCode function
+                    alt="Opponent Team Flag"
+                    className="w-16 h-16 "
+                  />
+                ) : (
+                  <div className="w-16 h-16 bg-gray-300  flex items-center justify-center text-gray-600">
+                    No Flag
+                  </div>
+                )}
+              </div>
+              <Droplist list={filteredOpponentTeams} getvalue={handleOpponentTeamChange} PLACEHOLDER="Select the Opponent Team" />
             </div>
           </div>
+        </div>
+
+        {/* Player Name */}
+        <label className="block text-white text-sm font-semibold mb-2">Select Player Name</label>
+        <div className="mb-6">
+          <Droplist list={players} getvalue={setPlayerName} PLACEHOLDER="Enter the Player Name" />
         </div>
 
         {/* Status */}
         <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-semibold mb-2">Select Status</label>
+          <label className="block text-white text-sm font-semibold mb-2">Select Status</label>
           <Droplist list={statusArray} getvalue={setStatus} />
         </div>
 
         {/* Model */}
         <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-semibold mb-2">Select Model</label>
+          <label className="block text-white text-sm font-semibold mb-2">Select Model</label>
           <Droplist list={modelArray} getvalue={setModel} />
         </div>
 
         {/* Submit Button */}
         <div className="text-center">
-          <Button onClick={handleSubmit} color="primary" size="lg" auto>
+          <Button 
+            onClick={handleSubmit} 
+            color="primary" 
+            size="lg" 
+            auto
+            className="bg-gradient-to-r from-blue-400 to-green-500 hover:from-blue-500 hover:to-green-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 shadow-lg"
+          >
             Predict the Output
           </Button>
         </div>

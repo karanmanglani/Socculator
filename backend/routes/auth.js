@@ -127,5 +127,44 @@ app.post('/submit', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+app.post('/getreport', async (req, res) => {
+  try {
+    const { player } = req.body;
+    const command = `python ../python/reportGen.py "${player}"`;
+
+    console.log(`Executing command: ${command}`);
+
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error executing Python script: ${error.message}`);
+        return res.status(500).send('Error executing script');
+      }
+
+      // Check for stderr (optional)
+      if (stderr) {
+        console.error(`Python script stderr: ${stderr}`);
+      }
+
+      // Remove any unwanted text from the output if needed
+      let jsonString = stdout.trim();
+
+      try {
+        // Parse the cleaned JSON string
+        let jsonObject = JSON.parse(jsonString);
+
+        // Send the parsed JSON object as a response
+        res.json({ success: true, result: jsonObject });
+        console.log(`Python script output: ${JSON.stringify(jsonObject)}`);
+      } catch (parseError) {
+        console.error(`Error parsing JSON output: ${parseError.message}`);
+        res.status(500).send('Error parsing JSON output');
+      }
+    });
+  } catch (error) {
+    console.error(`Server error: ${error.message}`);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports=app;
 

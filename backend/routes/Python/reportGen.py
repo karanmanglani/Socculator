@@ -1,25 +1,19 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import warnings
 import sys
-import json  # Import json module to output in JSON format
-
+import json
 
 def load_data(file_path):
     # Load the CSV file into a pandas DataFrame
     df = pd.read_csv(file_path)
-
     # Convert 'date' column to datetime for further analysis
     df['date'] = pd.to_datetime(df['date'])
-
     return df
-
 
 def filter_player_data(df, player_name):
     # Filter the DataFrame to only include rows where the scorer is the player of interest
     player_data = df[df['scorer'] == player_name]
     return player_data
-
 
 def calculate_player_statistics(player_data, df):
     # Total goals
@@ -61,11 +55,10 @@ def calculate_player_statistics(player_data, df):
         'goals_by_date': goals_by_date
     }
 
-
 def plot_goals_over_time(goals_by_date, player_name):
     # Plot the player's goal trend over time using the Timestamp index
     plt.figure(figsize=(10, 6))
-    goals_by_date.plot(kind='line', marker='o', linestyle='-', color='b')
+    pd.Series(goals_by_date).plot(kind='line', marker='o', linestyle='-', color='b')
     plt.title(f'Goals over time for {player_name}')
     plt.xlabel('Date')
     plt.ylabel('Goals')
@@ -74,16 +67,12 @@ def plot_goals_over_time(goals_by_date, player_name):
     # Save the plot as an image (PNG format)
     image_filename = "plot.png"
     plt.savefig(image_filename, format='png')
-    # print(f"Plot saved as {image_filename}")
-
 
 def main():
-    # Check if the user provided the player's name as a command-line argument
+    # Get the player name from the command-line arguments
     if len(sys.argv) < 2:
         print("Please provide a player's name as a command-line argument.")
         sys.exit(1)
-
-    # Get the player name from the command-line arguments
     player_name = sys.argv[1]
 
     # Define the file path
@@ -101,13 +90,12 @@ def main():
     # Step 4: Plot goals over time
     plot_goals_over_time(stats['goals_by_date'], player_name)
 
-    # Step 5: Convert the 'goals_by_date' to a dictionary with string dates for JSON output
-    stats['goals_by_date'] = {str(date): count for date, count in stats['goals_by_date'].items()}
+    # Step 5: Convert the 'goals_by_date' to a dictionary with formatted string dates for JSON output
+    stats['goals_by_date'] = {date.strftime('%Y-%m-%d'): count for date, count in stats['goals_by_date'].items()}
 
     # Step 6: Output the statistics in JSON format
     json_output = json.dumps(stats, indent=4)  # Convert stats dictionary to JSON string
     print(json_output)  # Print JSON output to console
-
 
 # Run the main function
 if __name__ == "__main__":

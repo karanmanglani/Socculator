@@ -93,12 +93,11 @@ app.post("/fetchuser", fetchuser, async (req, res) => {
 
 app.post('/submit', async (req, res) => {
   try {
-    // const { playerName, playerTeam, opponentTeam, status } = req.body;
-    //python main.py xgboost_model "Ludovic Magnin" Switzerland Argentina 1
+    const {player, team,opponent,status } = req.body;
+    const command = `python ../python/main.py xgboost_model "${player}" ${team} ${opponent} ${status}`;
 
-    // Construct the command to run the Python script with the correct path
-    const command = `python IIIT_NAYA_RAIPUR/python/main.py xgboost_model "Ludovic Magnin" Switzerland Argentina 1`;
-    
+    console.log(`Executing command: ${command}`);
+
     exec(command, (error, stdout, stderr) => {
       if (error) {
         console.error(`Error executing Python script: ${error.message}`);
@@ -110,12 +109,13 @@ app.post('/submit', async (req, res) => {
       }
       // Send the output of the Python script as a response
       res.json({ success: true, result: stdout });
-      console.log(stdout);
+      console.log(`Python script output: ${stdout}`);
     });
   } catch (error) {
     console.error(`Server error: ${error.message}`);
     res.status(500).send('Server Error');
   }
 });
+
 module.exports=app;
 

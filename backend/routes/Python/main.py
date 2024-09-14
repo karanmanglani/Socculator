@@ -29,39 +29,47 @@ def predict_goals(model, player_name, player_team, opponent_team, is_winner, lab
     # Generate textual explanation
     explanation = generate_textual_explanation(player_name, player_team, opponent_team, is_winner, predicted_goals[0],
                                                stats)
-    if(predicted_goals < 1.25):
-        return 0,explanation
-    warnings.filterwarnings("ignore")
 
+    # Handle edge case where player has never played against the opponent team
+    if 'Not enough data' in explanation:
+        return 0, explanation
+
+    if (predicted_goals < 1.25):
+        return 0, explanation
+
+    warnings.filterwarnings("ignore")
     return custom_round(predicted_goals[0]), explanation
 
 
 # Function to generate a human-friendly explanation based on player statistics
 def generate_textual_explanation(player_name, player_team, opponent_team, is_winner, predicted_goals, stats):
-    if(predicted_goals < 1.25):
+    if (predicted_goals < 1.25):
         predicted_goals = 0
     else:
         predicted_goals = custom_round(predicted_goals)
 
-    # Get player statistics for the specific team
+    # Get player statistics for the specific team and opponent
     player_stats = stats[stats['scorer'] == player_name]
     player_team_stats = player_stats[player_stats['team'] == player_team]
+    player_vs_opponent_stats = player_team_stats[(player_team_stats['home_team'] == opponent_team) |
+                                                 (player_team_stats['away_team'] == opponent_team)]
+
+    # Check if player has never played against this opponent
+    if player_vs_opponent_stats.empty:
+        return f"Not enough data: {player_name} has never played against {opponent_team}. Predicted goals: 0"
 
     # Calculate statistics
-    if player_team_stats.empty:
-        return f"{player_name} never played with {player_team} team but according to its history against {opponent_team}, it is predicted for them to score {predicted_goals} goals."
-
     player_matches = player_team_stats[['date', 'home_team', 'away_team']].drop_duplicates()
 
     player_goals_in_wins = player_team_stats[player_team_stats['is_winner'] == 1].shape[0]
     player_goals_in_losses = player_team_stats[player_team_stats['is_winner'] == 0].shape[0]
 
     player_matches_in_wins = \
-    player_team_stats[player_team_stats['is_winner'] == 1][['date', 'home_team', 'away_team']].drop_duplicates().shape[
-        0]
+        player_team_stats[player_team_stats['is_winner'] == 1][
+            ['date', 'home_team', 'away_team']].drop_duplicates().shape[0]
     player_matches_in_losses = \
-    player_team_stats[player_team_stats['is_winner'] == 0][['date', 'home_team', 'away_team']].drop_duplicates().shape[
-        0]
+        player_team_stats[player_team_stats['is_winner'] == 0][
+            ['date', 'home_team', 'away_team']].drop_duplicates().shape[0]
 
     avg_goals_in_wins = player_goals_in_wins / player_matches_in_wins if player_matches_in_wins > 0 else 0
     avg_goals_in_losses = player_goals_in_losses / player_matches_in_losses if player_matches_in_losses > 0 else 0
@@ -123,9 +131,15 @@ if __name__ == "__main__":
     label_encoder_player = joblib.load('label_encoder_player.joblib')
     stats = pd.read_csv('goalscorers_with_winner.csv')
 
+
+
     # Perform prediction
     predicted_goals, explanation = predict_goals(model, args.player_name, args.player_team, args.opponent_team,
                                                  args.is_winner, label_encoder_team, label_encoder_player, stats)
+
+    if (args.player_team == args.opponent_team):
+        predicted_goals = 0
+        explanation = "Both Playing and Opponent team cant be same"
 
     # Ignore warnings
     warnings.filterwarnings("ignore")

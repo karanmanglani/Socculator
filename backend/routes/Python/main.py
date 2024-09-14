@@ -86,14 +86,14 @@ def generate_textual_explanation(player_name, player_team, opponent_team, is_win
         if player_goals > predicted_goals:
             explanation = (
                 f"Based on {player_name}'s recent performances with {player_team}, "
-                f"{player_name} has shown a scoring potential of {avg_goals_in_wins:.2f} in wins. "
+                f"{player_name} generally scores {player_goals} goals in wins. "
                 f"Given {opponent_team}'s strong defense, the model predicts a scoring potential of {predicted_goals:.2f} for this match.\n"
                 f"{team_shap_contribution}\n{opponent_shap_contribution}\n{winner_shap_contribution}"
             )
         else:
             explanation = (
                 f"Based on {player_name}'s recent performances with {player_team}, "
-                f"{player_name} has shown a scoring potential of {avg_goals_in_wins:.2f} in wins. "
+                f"{player_name} generally scores {player_goals} goals in wins. "
                 f"Considering {player_name}'s aggressive playstyle, the model predicts a scoring potential of {predicted_goals:.2f} for this match.\n"
                 f"{team_shap_contribution}\n{opponent_shap_contribution}\n{winner_shap_contribution}"
             )
@@ -103,14 +103,14 @@ def generate_textual_explanation(player_name, player_team, opponent_team, is_win
         if player_goals > predicted_goals:
             explanation = (
                 f"Reviewing {player_name}'s recent matches with {player_team}, "
-                f"{player_name} has shown a scoring potential of {avg_goals_in_losses:.2f} in losses. "
+                f"{player_name} generally scores {player_goals} goals in losses. "
                 f"Due to {opponent_team}'s solid defense, the model predicts a scoring potential of {predicted_goals:.2f} for this match.\n"
                 f"{team_shap_contribution}\n{opponent_shap_contribution}\n{winner_shap_contribution}"
             )
         else:
             explanation = (
                 f"Reviewing {player_name}'s recent matches with {player_team}, "
-                f"{player_name} has shown a scoring potential of {avg_goals_in_losses:.2f} in losses. "
+                f"{player_name} generally scores {player_goals} goals in losses. "
                 f"Given {player_name}'s historical data, the model predicts a scoring potential of {predicted_goals:.2f} for this match.\n"
                 f"{team_shap_contribution}\n{opponent_shap_contribution}\n{winner_shap_contribution}"
             )
